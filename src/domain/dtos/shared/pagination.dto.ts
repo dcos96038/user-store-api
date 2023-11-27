@@ -1,10 +1,8 @@
 export class PaginationDto {
   private constructor (readonly page: number, readonly limit: number) {}
 
-  static create (page: number = 1, limit: number = 10) {
-    if (!page) return ['Page is required'] as const
-
-    if (!limit) return ['Limit is required'] as const
+  static create (object: Record<string, any>) {
+    const { page = 1, limit = 10 } = object
 
     if (isNaN(page) || isNaN(limit)) return ['Page and limit must be numbers'] as const
 
