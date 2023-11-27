@@ -18,7 +18,7 @@ export class ProductsController {
   createProduct = (req: Request, res: Response) => {
     const [error, createProductDto] = CreateProductDto.create(req.body)
 
-    if (error) return this.handleError(error, res)
+    if (error) return res.status(400).json({ message: error })
 
     this.productsService.createProduct(createProductDto)
       .then(product => res.status(201).json(product))
@@ -28,7 +28,7 @@ export class ProductsController {
   getProducts = (req: Request, res: Response) => {
     const [error, paginationDto] = PaginationDto.create(req.query)
 
-    if (error) return this.handleError(error, res)
+    if (error) return res.status(400).json({ message: error })
 
     this.productsService.getProducts(paginationDto)
       .then(products => res.json(products))

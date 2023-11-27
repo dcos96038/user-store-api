@@ -47,8 +47,6 @@ export class AuthController {
     if (!token) return res.status(400).json({ message: 'Token is required' })
 
     this.authService.validateEmail(token).then((response) => {
-      console.log(response)
-
       res.json(response)
     }
     ).catch((error) => {
