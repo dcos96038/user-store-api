@@ -30,10 +30,6 @@ export class Server {
 
     this.app.use(this.routes)
 
-    this.app.get('*', (req, res) => {
-      res.sendFile(path.join(this.publicPath, 'index.html'))
-    })
-
     this.serverListener = this.app.listen(this.port, () => {
       console.log(`Server listening on port ${this.port}`)
     })
