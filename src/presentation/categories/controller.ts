@@ -29,12 +29,7 @@ export class CategoryController {
   }
 
   getCategories = (req: Request, res: Response) => {
-    const params = req.query
-
-    const page = params.page ? parseInt(params.page as string) : 1
-    const limit = params.limit ? parseInt(params.limit as string) : 10
-
-    const [error, paginationDto] = PaginationDto.create(page, limit)
+    const [error, paginationDto] = PaginationDto.create(req.query)
 
     if (error) return this.handleError(error, res)
 
