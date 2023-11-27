@@ -1,3 +1,5 @@
+import { validators } from '../../../config/validators'
+
 export class CreateProductDto {
   private constructor (
     public readonly name: string,
@@ -9,7 +11,9 @@ export class CreateProductDto {
   ) {}
 
   static create (object: Record<string, any>) {
-    const { name, available, price, description, userId, categoryId } = object
+    const { name, available, price, description, categoryId, user } = object
+
+    const userId = user?.id
 
     let availableBoolean = available
 
@@ -22,7 +26,11 @@ export class CreateProductDto {
 
     if (!userId) return ['UserId is required'] as const
 
+    if (!validators.isMongoId(userId)) return ['UserId is invalid'] as const
+
     if (!categoryId) return ['CategoryId is required'] as const
+
+    if (!validators.isMongoId(categoryId)) return ['CategoryId is invalid'] as const
 
     return [undefined, new CreateProductDto(name, availableBoolean, price, userId, categoryId, description)] as const
   }

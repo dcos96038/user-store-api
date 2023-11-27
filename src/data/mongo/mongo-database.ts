@@ -19,3 +19,12 @@ export const connect = async (options: Options) => {
     throw error
   }
 }
+
+export const disconnect = async () => {
+  try {
+    await mongoose.disconnect()
+  } catch (error) {
+    console.log('Error disconnecting from MongoDB')
+    throw error
+  }
+}
