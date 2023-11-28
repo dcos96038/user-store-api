@@ -25,7 +25,6 @@ export class FileUploadService {
     const isValidExtension = validExtensions.includes(fileExtension)
 
     if (!isValidExtension) throw CustomError.badRequest(`Extension '${fileExtension}' is invalid. Valid extensions: ${validExtensions.join(', ')}`)
-    console.log(isValidExtension)
 
     await file.mv(`${destination}/${fileName}`)
     return fileName
