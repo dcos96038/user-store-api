@@ -12,7 +12,7 @@ export const appRoutes = () => {
   router.use('/api/auth', authRoutes())
   router.use('/api/categories', [AuthMiddleware.validateJWT], categoryRoutes())
   router.use('/api/products', [AuthMiddleware.validateJWT], productsRoutes())
-  router.use('/api/file-upload', [AuthMiddleware.validateJWT], fileUploadRoutes())
+  router.use('/api/file-upload', fileUploadRoutes())
 
   return router
 }

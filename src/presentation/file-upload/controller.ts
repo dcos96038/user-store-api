@@ -1,8 +1,10 @@
 import { type Response, type Request } from 'express'
 import { CustomError } from '../../domain/errors/custom.error'
+import { type FileUploadService } from '../services/file-upload.service'
+import { type UploadedFile } from 'express-fileupload'
 
 export class FileUploadController {
-  // constructor
+  constructor (private readonly fileUploadService: FileUploadService) { }
 
   private readonly handleError = (err: unknown, res: Response) => {
     if (err instanceof CustomError) {
@@ -13,7 +15,18 @@ export class FileUploadController {
   }
 
   uploadFile = (req: Request, res: Response) => {
-    return 'Upload File'
+    const files = req.files
+
+    if (!files || Object.keys(files).length === 0) throw CustomError.badRequest('No files were uploaded.')
+
+    const file = files.file as UploadedFile
+
+    this.fileUploadService.uploadSingle(file, 'uploads', ['png', 'jpg', 'jpeg', 'gif']).then((response) => {
+      res.json(response)
+    }
+    ).catch((error) => {
+      this.handleError(error, res)
+    })
   }
 
   uploadMultiFile = (req: Request, res: Response) => {
