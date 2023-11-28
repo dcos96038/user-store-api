@@ -21,11 +21,11 @@ export class FileUploadController {
 
     const file = files.file as UploadedFile
 
-    this.fileUploadService.uploadSingle(file, 'uploads', ['png', 'jpg', 'jpeg', 'gif']).then((response) => {
-      res.json(response)
+    this.fileUploadService.uploadSingle(file).then((response) => {
+      return res.json(response)
     }
     ).catch((error) => {
-      this.handleError(error, res)
+      return this.handleError(error, res)
     })
   }
 

@@ -2,9 +2,10 @@ import { type UploadedFile } from 'express-fileupload'
 import { CustomError } from '../../domain/errors/custom.error'
 import path from 'path'
 import fs from 'fs'
+import { uuidAdapter } from '../../config/uuid.adapter'
 
 export class FileUploadService {
-  // constructor() {}
+  constructor (private readonly uuid = uuidAdapter.generate) {}
 
   private checkFolder (folderPath: string) {
     if (!fs.existsSync(folderPath)) {
@@ -12,24 +13,22 @@ export class FileUploadService {
     }
   }
 
-  async uploadSingle (file: UploadedFile, folderPath: string = 'uploads', validExtensions: string[] = ['png', 'jpg', 'jpeg', 'gif']) {
-    try {
-      const fileExtension = file.mimetype.split('/').at(1)
-      const destination = path.resolve(__dirname, '..', '..', '..', folderPath)
-      this.checkFolder(destination)
+  async uploadSingle (file: UploadedFile, folderPath: string = 'uploads', validExtensions: string[] = ['gif', 'jpeg', 'jpg', 'png', 'svg']) {
+    const fileExtension = file.mimetype.split('/').at(1)
+    const destination = path.resolve(__dirname, '..', '..', '..', folderPath)
+    this.checkFolder(destination)
 
-      await file.mv(`${destination}/${file.name}`)
+    const fileName = `${this.uuid()}.${fileExtension}`
 
-      if (!fileExtension) throw CustomError.badRequest('Invalid file extension')
+    if (!fileExtension) throw CustomError.badRequest('Invalid file extension')
 
-      const isValidExtension = validExtensions.includes(fileExtension)
+    const isValidExtension = validExtensions.includes(fileExtension)
 
-      if (!isValidExtension) throw CustomError.badRequest('Invalid file extension')
+    if (!isValidExtension) throw CustomError.badRequest(`Extension '${fileExtension}' is invalid. Valid extensions: ${validExtensions.join(', ')}`)
+    console.log(isValidExtension)
 
-      return 'Upload Single'
-    } catch (error) {
-      throw CustomError.internalServerError("Couldn't upload file")
-    }
+    await file.mv(`${destination}/${fileName}`)
+    return fileName
   }
 
   uploadMulti (files: any[], folderPath: string = 'uploads', validExtensions: string[] = ['png', 'jpg', 'jpeg', 'gif']) {
