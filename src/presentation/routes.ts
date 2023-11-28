@@ -9,7 +9,7 @@ export const appRoutes = () => {
   const router = Router()
 
   router.use('/api/auth', authRoutes())
-  router.use('/api/categories', categoryRoutes())
+  router.use('/api/categories', [AuthMiddleware.validateJWT], categoryRoutes())
   router.use('/api/products', [AuthMiddleware.validateJWT], productsRoutes())
 
   return router
